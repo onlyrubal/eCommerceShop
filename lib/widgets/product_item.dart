@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../screens/product_details_screen.dart';
-import '../providers/product.dart';
+import '../providers/products.dart';
 import '../providers/cart.dart';
+import 'package:flushbar/flushbar.dart';
 
 class ProductItem extends StatelessWidget {
   @override
@@ -60,6 +61,42 @@ class ProductItem extends StatelessWidget {
               onPressed: () {
                 cart.addItem(
                     product.id, product.price, product.title, product.imageUrl);
+                //    Scaffold.of(context).hideCurrentSnackBar();
+                // Scaffold.of(context).showSnackBar(SnackBar(
+                //   duration: Duration(seconds: 2),
+                //   content: Text(
+                //     '\'${product.title}\' added to the cart',
+                //     style: Theme.of(context).textTheme.subtitle2,
+                //   ),
+                //   backgroundColor: Colors.white,
+                //   action: SnackBarAction(
+                //       label: 'Undo',
+                //       onPressed: () {
+                //         cart.removeSingleItem(product.id);
+                //       }),
+                // ));
+                Flushbar(
+                  margin: EdgeInsets.all(8),
+                  borderRadius: 8,
+                  message: '\'${product.title}\' added to the cart',
+                  icon: Icon(
+                    Icons.shopping_cart,
+                    size: 28.0,
+                    color: Theme.of(context).accentColor,
+                  ),
+                  mainButton: FlatButton(
+                    onPressed: () {
+                      cart.removeSingleItem(product.id);
+                    },
+                    child: Text(
+                      "UNDO",
+                      style: TextStyle(color: Theme.of(context).accentColor),
+                    ),
+                  ),
+                  duration: Duration(seconds: 2),
+                  forwardAnimationCurve: Curves.decelerate,
+                  reverseAnimationCurve: Curves.easeOut,
+                )..show(context);
               },
               color: Theme.of(context).accentColor,
             ),

@@ -26,6 +26,27 @@ class ProductItemInCart extends StatelessWidget {
       // It needs any unique key and since CartId is unique, so we wrote it.
       key: ValueKey(id),
       direction: DismissDirection.endToStart,
+      confirmDismiss: (swipeDirection) {
+        return showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text('Are You Sure ?'),
+            content: Text('Do you want to remove this item.'),
+            actions: [
+              FlatButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(true);
+                  },
+                  child: Text('Yes')),
+              FlatButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(false);
+                  },
+                  child: Text('No')),
+            ],
+          ),
+        );
+      },
       background: Container(
         color: Theme.of(context).errorColor,
         child: Icon(

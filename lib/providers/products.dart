@@ -1,5 +1,29 @@
 import 'package:flutter/material.dart';
-import './product.dart';
+import 'package:flutter/foundation.dart';
+
+class Product with ChangeNotifier {
+  final String id;
+  final String title;
+  final String description;
+  final double price;
+  final String imageUrl;
+  // Not Final because it can be changable.
+  bool isFavorite;
+
+  Product({
+    @required this.id,
+    @required this.title,
+    @required this.description,
+    @required this.price,
+    @required this.imageUrl,
+    this.isFavorite = false,
+  });
+
+  void toggleFavoriteStatus() {
+    isFavorite = !isFavorite;
+    notifyListeners();
+  }
+}
 
 class Products with ChangeNotifier {
   List<Product> _items = [
@@ -30,5 +54,36 @@ class Products with ChangeNotifier {
 
   Product findById(String productId) {
     return _items.firstWhere((product) => product.id == productId);
+  }
+
+  void removeProductFromInventory(String productId) {
+    _items.removeWhere((productItem) => productItem.id == productId);
+    notifyListeners();
+  }
+
+  void addNewProduct(Product product) {
+    final newProduct = Product(
+      description: product.description,
+      imageUrl: product.imageUrl,
+      price: product.price,
+      title: product.title,
+      id: DateTime.now().toString(),
+    );
+
+    _items.add(newProduct);
+    notifyListeners();
+  }
+
+  void updateProduct(String productId, Product newProduct) {
+    // Finding the index of product in list of products.
+    final productIndex =
+        _items.indexWhere((product) => product.id == productId);
+
+    if (productIndex >= 0) {
+      _items[productIndex] = newProduct;
+      notifyListeners();
+    } else {
+      print('...');
+    }
   }
 }

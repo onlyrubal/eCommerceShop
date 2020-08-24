@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import '../widgets/badge.dart';
 import 'package:provider/provider.dart';
 import '../widgets/products_grid.dart';
-import '../providers/products.dart';
 import '../providers/cart.dart';
 import './cart_screen.dart';
 import '../widgets/app_drawer.dart';
 
-enum FilterOptions { All, Favorites, Orders }
+enum FilterOptions {
+  All,
+  Favorites,
+  Orders,
+}
 
 class ProductsOverviewScreen extends StatefulWidget {
   @override
@@ -18,8 +21,6 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   bool _showFavoritesOnly = false;
   @override
   Widget build(BuildContext context) {
-    final productData = Provider.of<Products>(context);
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
