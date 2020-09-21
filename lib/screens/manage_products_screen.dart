@@ -6,6 +6,11 @@ import '../widgets/manage_product_item.dart';
 import '../screens/edit_product_screen.dart';
 
 class ManageProductsScreen extends StatelessWidget {
+  Future<void> _refreshProducts(BuildContext context) async {
+    // Calling Method to refresh product list.
+    await Provider.of<Products>(context).fetchProducts();
+  }
+
   static final routeName = 'manage-products';
   @override
   Widget build(BuildContext context) {
@@ -31,52 +36,54 @@ class ManageProductsScreen extends StatelessWidget {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Column(
-              children: [
-                SizedBox(height: 10),
-                Container(
-                  child: Card(
-                    child: Container(
-                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Total Count of Products',
-                            style: Theme.of(context).textTheme.bodyText2,
-                          ),
-                          Chip(
-                            label: Text(
-                              '${products.items.length}',
-                              style: Theme.of(context).textTheme.bodyText1,
+          child: RefreshIndicator(
+            onRefresh: () => _refreshProducts(context),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Column(
+                children: [
+                  SizedBox(height: 10),
+                  Container(
+                    child: Card(
+                      child: Container(
+                        padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Total Count of Products',
+                              style: Theme.of(context).textTheme.bodyText2,
                             ),
-                            backgroundColor:
-                                Theme.of(context).buttonColor.withAlpha(200),
-                          ),
-                        ],
+                            Chip(
+                              label: Text(
+                                '${products.items.length}',
+                                style: Theme.of(context).textTheme.bodyText1,
+                              ),
+                              backgroundColor:
+                                  Theme.of(context).buttonColor.withAlpha(200),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-                SizedBox(height: 10),
-                Container(
-                  child: ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemBuilder: (_, index) {
-                      return ManageProductItem(
-                        title: products.items[index].title,
-                        imageUrl: products.items[index].imageUrl,
-                        id: products.items[index].id,
-                        price: products.items[index].price,
-                      );
-                    },
-                    itemCount: products.items.length,
-                  ),
-                )
-              ],
+                  SizedBox(height: 10),
+                  Container(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemBuilder: (_, index) {
+                        return ManageProductItem(
+                          title: products.items[index].title,
+                          imageUrl: products.items[index].imageUrl,
+                          id: products.items[index].id,
+                          price: products.items[index].price,
+                        );
+                      },
+                      itemCount: products.items.length,
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ),

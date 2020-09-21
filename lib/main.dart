@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import './screens/auth_screen.dart';
 import './screens/edit_product_screen.dart';
 import './providers/orders.dart';
 import './screens/cart_screen.dart';
 import './screens/product_details_screen.dart';
-import './screens/products_overview_screen.dart';
 import './screens/order_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -86,7 +86,7 @@ class MyApp extends StatelessWidget {
         ),
         initialRoute: '/',
         routes: {
-          '/': (ctx) => ProductsOverviewScreen(),
+          '/': (ctx) => AuthScreen(),
           ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
           CartScreen.routeName: (ctx) => CartScreen(),
           OrderScreen.routeName: (ctx) => OrderScreen(),

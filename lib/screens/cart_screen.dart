@@ -68,23 +68,7 @@ class CartScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              Container(
-                padding: EdgeInsets.all(20),
-                child: GestureDetector(
-                  onTap: () {
-                    // Adding the cart items to Order
-                    order.addOrder(
-                      cart.items.values.toList(),
-                      cart.totalCartAmount,
-                    );
-                    // Clearing the Cart
-                    cart.clearCart();
-                  },
-                  child: PrimaryButton(
-                    btnText: 'PLACE ORDER',
-                  ),
-                ),
-              ),
+              PlaceOrderButton(cart: cart, order: order),
               GestureDetector(
                 onTap: () {
                   Navigator.of(context).pop();
@@ -118,6 +102,58 @@ class CartScreen extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class PlaceOrderButton extends StatefulWidget {
+  const PlaceOrderButton({
+    Key key,
+    @required this.cart,
+    @required this.order,
+  }) : super(key: key);
+
+  final Cart cart;
+  final Orders order;
+
+  @override
+  _PlaceOrderButtonState createState() => _PlaceOrderButtonState();
+}
+
+class _PlaceOrderButtonState extends State<PlaceOrderButton> {
+  bool _isLoading = false;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(20),
+      child: GestureDetector(
+        onTap: (widget.cart.totalCartAmount <= 0 || _isLoading)
+            ? null
+            : () async {
+                setState(() {
+                  //Making LoadingSpinner visible
+                  _isLoading = true;
+                });
+                // Adding the cart items to Order
+                await widget.order.addOrder(
+                  widget.cart.items.values.toList(),
+                  widget.cart.totalCartAmount,
+                );
+
+                setState(() {
+                  // Resetting LoadingSpinner to false.
+                  _isLoading = false;
+                });
+
+                // Clearing the Cart
+                widget.cart.clearCart();
+              },
+        child: _isLoading
+            ? CircularProgressIndicator()
+            : PrimaryButton(
+                btnText: 'PLACE ORDER',
+              ),
       ),
     );
   }

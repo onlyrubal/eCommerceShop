@@ -13,6 +13,7 @@ class ManageProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scaffold = Scaffold.of(context);
     return Container(
       margin: const EdgeInsets.only(bottom: 10.0),
       child: InkWell(
@@ -22,7 +23,7 @@ class ManageProductItem extends StatelessWidget {
               .pushNamed(EditProductScreen.routeName, arguments: id);
         },
         child: Dismissible(
-          // direction: DismissDirection.endToStart,
+          direction: DismissDirection.endToStart,
           key: ValueKey(id),
           background: Container(
             color: Theme.of(context).errorColor,
@@ -34,9 +35,20 @@ class ManageProductItem extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 10),
             alignment: Alignment.centerRight,
           ),
-          onDismissed: (dismissDirection) {
-            Provider.of<Products>(context, listen: false)
-                .removeProductFromInventory(id);
+          onDismissed: (dismissDirection) async {
+            try {
+              await Provider.of<Products>(context, listen: false)
+                  .removeProductFromInventory(id);
+            } catch (error) {
+              scaffold.showSnackBar(
+                SnackBar(
+                  content: Text(
+                    error.toString(),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              );
+            }
           },
           child: Card(
             child: Container(

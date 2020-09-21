@@ -12,6 +12,9 @@ class ProductItem extends StatelessWidget {
 
     // Access to cart container
     final cart = Provider.of<Cart>(context, listen: false);
+
+    final scaffold = Scaffold.of(context);
+
     return Container(
       decoration: BoxDecoration(
         border: Border.all(),
@@ -39,8 +42,19 @@ class ProductItem extends StatelessWidget {
                 icon: Icon(product.isFavorite
                     ? Icons.favorite
                     : Icons.favorite_border),
-                onPressed: () {
-                  product.toggleFavoriteStatus();
+                onPressed: () async {
+                  try {
+                    await product.toggleFavoriteStatus();
+                  } catch (error) {
+                    scaffold.showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          error.toString(),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    );
+                  }
                 },
                 color: Theme.of(context).accentColor,
               ),
